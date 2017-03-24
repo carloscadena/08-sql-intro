@@ -31,12 +31,12 @@ app.use(express.static('./public'));
 
 // REVIEW: Routes for requesting HTML resources
 
-// NOTE:
+// NOTE: Client (create view #1) requests the "/" root directory on port 3000 and server responds with (a response #5) of index.html.
 app.get('/', function(request, response) {
   response.sendFile('index.html', {root: '.'});
 });
 
-// NOTE:
+// NOTE: Client (create view #1) requests the "/new" directory on port 3000 and server responds with (a response #5) of new.html.
 app.get('/new', function(request, response) {
   response.sendFile('new.html', {root: '.'});
 });
@@ -55,7 +55,7 @@ app.get('/articles', function(request, response) {
   })
 });
 
-// NOTE:
+// NOTE: The user (create view #1) sends an AJAX request (request #2) for /articles to add a new instance of articles to the database (query #3). If successful, the database sends a completed notification (result #4) to the server and then a response (#5) to the client that the insert command was completed.
 app.post('/articles', function(request, response) {
   client.query(
     `INSERT INTO
@@ -79,7 +79,7 @@ app.post('/articles', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The client (#1) sends a request (#2) to the server (#3) to update an article. If successful, the database sends the result (#4) to the server, and the server sends a reponse (#5) the client that the update was completed.
 app.put('/articles/:id', function(request, response) {
   client.query(
     `UPDATE articles
@@ -105,7 +105,7 @@ app.put('/articles/:id', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The client (#1) sends a request (#2) to the server (#3) to delete an article. If successful, the database sends the result (#4) to the server, and the server sends a reponse (#5) the client that the delete was completed.
 app.delete('/articles/:id', function(request, response) {
   client.query(
     `DELETE FROM articles WHERE article_id=$1;`,
@@ -119,7 +119,7 @@ app.delete('/articles/:id', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The client (#1) sends a request (#2) to the server (#3) to delete all articles. If successful, the database sends the result (#4) to the server, and the server sends a reponse (#5) the client that the delete was completed.
 app.delete('/articles', function(request, response) {
   client.query(
     'DELETE FROM articles;'
@@ -132,7 +132,7 @@ app.delete('/articles', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: Call the loadDB function below on line 166.
 loadDB();
 
 app.listen(PORT, function() {
@@ -142,7 +142,7 @@ app.listen(PORT, function() {
 
 //////// ** DATABASE LOADER ** ////////
 ////////////////////////////////////////
-// NOTE:
+// NOTE: Select all articles. If there are rows starting from zero (parse is looking for a value), then read the JSON file. Take the text from JSON for each article, then insert or populate articles into table. Server asks database using query (#3) to select all articles. When the client loads the page (#1) a request is sent for JSON data (#2) to the server. The server sends a query to the database (#3) to add articles.
 function loadArticles() {
   client.query('SELECT COUNT(*) FROM articles')
   .then(result => {
@@ -162,7 +162,7 @@ function loadArticles() {
   })
 }
 
-// NOTE:
+// NOTE: When the client (#1) loads a page (#2) the server requests table data (#3); if the table doesn't exist, it creates it. The newly created table is then populated with the data added to it from the load articles function (above on line 146).
 function loadDB() {
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
